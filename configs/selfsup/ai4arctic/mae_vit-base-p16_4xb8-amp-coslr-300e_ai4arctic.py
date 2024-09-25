@@ -1,4 +1,4 @@
-_base_ = 'mae_vit-base-p16_8xb512-amp-coslr-400e_ai4arctic.py'
+_base_ = 'mae_vit-base-p16_4xb8-amp-coslr-400e_ai4arctic.py'
 
 # pre-train for 300 epochs
 max_epochs = 300

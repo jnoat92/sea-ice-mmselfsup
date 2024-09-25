@@ -107,7 +107,8 @@ train_dataloader = dict(batch_size=8,
                         persistent_workers=True,
                         sampler=dict(type='WeightedInfiniteSampler', use_weights=True),
                         collate_fn=dict(type='default_collate'),
-                        dataset=concat_dataset)
+                        dataset=concat_dataset,
+                        num_batch_per_epoch=500)
 
 
 # ============== MODEL ==============

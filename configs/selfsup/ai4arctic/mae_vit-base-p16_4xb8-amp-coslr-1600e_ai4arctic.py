@@ -1,7 +1,7 @@
-_base_ = 'mae_vit-base-p16_8xb512-amp-coslr-400e_ai4arctic.py'
+_base_ = 'mae_vit-base-p16_4xb8-amp-coslr-400e_ai4arctic.py'
 
-# pre-train for 800 epochs
-max_epochs = 800
+# pre-train for 1600 epochs
+max_epochs = 1600
 train_cfg = dict(max_epochs=max_epochs)
 
 # learning rate scheduler
@@ -15,7 +15,7 @@ param_scheduler = [
         convert_to_iter_based=True),
     dict(
         type='CosineAnnealingLR',
-        T_max=760,
+        T_max=1560,
         by_epoch=True,
         begin=40,
         end=max_epochs,

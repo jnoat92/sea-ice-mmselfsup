@@ -1,4 +1,4 @@
-_base_ = 'mae_vit-base-p16_8xb512-amp-coslr-1600e_ai4arctic.py'
+_base_ = 'mae_vit-base-p16_4xb8-amp-coslr-1600e_ai4arctic.py'
 
 # model settings
 model = dict(

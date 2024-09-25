@@ -1,26 +1,21 @@
-_base_ = 'mae_vit-large-p16_8xb512-amp-coslr-300e_ai4arctic.py'
+_base_ = 'mae_vit-base-p16_4xb8-amp-coslr-400e_ai4arctic.py'
 
-# pre-train for 100 epochs
-max_epochs = 1600
+# pre-train for 800 epochs
+max_epochs = 800
 train_cfg = dict(max_epochs=max_epochs)
-
-# model settings
-model = dict(
-    backbone=dict(type='MAEViT_CCH', arch='h'),
-    neck=dict(type='MAEPretrainDecoder', embed_dim=1280))
 
 # learning rate scheduler
 param_scheduler = [
     dict(
         type='LinearLR',
-        start_factor=1e-4,
+        start_factor=0.0001,
         by_epoch=True,
         begin=0,
         end=40,
         convert_to_iter_based=True),
     dict(
         type='CosineAnnealingLR',
-        T_max=1560,
+        T_max=760,
         by_epoch=True,
         begin=40,
         end=max_epochs,
