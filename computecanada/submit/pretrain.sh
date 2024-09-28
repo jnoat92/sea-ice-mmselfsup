@@ -4,9 +4,9 @@
 #SBATCH --tasks-per-node=4
 #SBATCH --cpus-per-task=12 # change this parameter to 2,4,6,... and increase "--num_workers" accordingly to see the effect on performance
 #SBATCH --mem=200G
-#SBATCH --time=23:59:00
+#SBATCH --time=06:59:00
 #SBATCH --output=../output/%j.out
-#SBATCH --account=rrg-dclausi
+#SBATCH --account=def-dclausi
 #SBATCH --mail-user=jnoat92@gmail.com
 #SBATCH --mail-type=BEGIN
 #SBATCH --mail-type=END
@@ -29,7 +29,7 @@ echo "Activating virtual environment done"
 echo "starting pretrain ..."
 
 echo "Config file: $1"
-# srun --ntasks=1 --gres=gpu:1 --kill-on-bad-exit=1 --cpus-per-task=12 python tools/train.py $1 --launcher slurm --resume
+# srun --ntasks=4 --gres=gpu:4 --kill-on-bad-exit=1 --cpus-per-task=12 python tools/train.py $1 --launcher slurm --resume
 srun --ntasks=4 --gres=gpu:4 --kill-on-bad-exit=1 --cpus-per-task=12 python tools/train.py $1 --launcher slurm
 
 # # Extract the base name without extension

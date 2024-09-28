@@ -1,7 +1,7 @@
 _base_ = [
-    '../_base_/models/mae_vit-base-p16.py',
-    '../_base_/schedules/adamw_coslr-200e_in1k.py',
-    '../_base_/default_runtime.py'
+    '../../_base_/models/mae_vit-base-p16.py',
+    '../../_base_/schedules/adamw_coslr-200e_in1k.py',
+    '../../_base_/default_runtime.py'
 ]
 
 # ============== DATASET ==============
@@ -58,29 +58,29 @@ channels = [
     'nersc_sar_primary',
     'nersc_sar_secondary',
 
-    # # -- incidence angle -- #
-    # 'sar_grid_incidenceangle',
+    # -- incidence angle -- #
+    'sar_grid_incidenceangle',
 
-    # # -- Geographical variables -- #
-    # 'sar_grid_latitude',
-    # 'sar_grid_longitude',
-    # 'distance_map',
+    # -- Geographical variables -- #
+    'sar_grid_latitude',
+    'sar_grid_longitude',
+    'distance_map',
 
-    # # # -- AMSR2 channels -- #
-    # 'btemp_6_9h', 'btemp_6_9v',
-    # 'btemp_7_3h', 'btemp_7_3v',
-    # 'btemp_10_7h', 'btemp_10_7v',
-    # 'btemp_18_7h', 'btemp_18_7v',
-    # 'btemp_23_8h', 'btemp_23_8v',
-    # 'btemp_36_5h', 'btemp_36_5v',
-    # 'btemp_89_0h', 'btemp_89_0v',
+    # # -- AMSR2 channels -- #
+    'btemp_6_9h', 'btemp_6_9v',
+    'btemp_7_3h', 'btemp_7_3v',
+    'btemp_10_7h', 'btemp_10_7v',
+    'btemp_18_7h', 'btemp_18_7v',
+    'btemp_23_8h', 'btemp_23_8v',
+    'btemp_36_5h', 'btemp_36_5v',
+    'btemp_89_0h', 'btemp_89_0v',
 
-    # # # -- Environmental variables -- #
-    # 'u10m_rotated', 'v10m_rotated',
-    # 't2m', 'skt', 'tcwv', 'tclw',
+    # # -- Environmental variables -- #
+    'u10m_rotated', 'v10m_rotated',
+    't2m', 'skt', 'tcwv', 'tclw',
 
-    # # -- acquisition time
-    # 'month', 'day'
+    # -- acquisition time
+    'month', 'day'
 ]
 
 
@@ -107,8 +107,7 @@ train_dataloader = dict(batch_size=8,
                         persistent_workers=True,
                         sampler=dict(type='WeightedInfiniteSampler', use_weights=True),
                         collate_fn=dict(type='default_collate'),
-                        dataset=concat_dataset,
-                        num_batch_per_epoch=500)
+                        dataset=concat_dataset)
 
 
 # ============== MODEL ==============
@@ -139,8 +138,9 @@ model = dict(
 
 # ============== SCHEDULE ==============
 # optimizer wrapper
+# Using 4 GPUs
 optimizer = dict(
-    type='AdamW', lr=1.5e-4 * 4096 / 256, betas=(0.9, 0.95), weight_decay=0.05)
+    type='AdamW', lr=1e-4 * 4, betas=(0.9, 0.999), weight_decay=0.01)
 optim_wrapper = dict(
     type='OptimWrapper',
     optimizer=optimizer,
@@ -154,48 +154,49 @@ optim_wrapper = dict(
         }))
 
 # runtime settings
-# pre-train for 400 epochs
-max_epochs = 400
-train_cfg = dict(max_epochs=max_epochs)
+n_iterations = 50000
+train_cfg = dict(type='IterBasedTrainLoop', 
+                 max_iters=n_iterations,
+                 _delete_=True)
 
 # learning rate scheduler
 param_scheduler = [
     dict(
         type='LinearLR',
-        start_factor=1e-4,
-        by_epoch=True,
+        start_factor=1/3,
+        by_epoch=False,
         begin=0,
-        end=40,
-        convert_to_iter_based=True),
+        end=n_iterations//10
+        ),
     dict(
         type='CosineAnnealingLR',
-        T_max=360,
-        by_epoch=True,
-        begin=40,
-        end=max_epochs,
-        convert_to_iter_based=True)
+        by_epoch=False,
+        begin=n_iterations//10,
+        end=n_iterations
+        )
 ]
 
 
 # ============== RUNTIME ==============
 
 default_hooks = dict(
-    logger=dict(type='LoggerHook', interval=100),
-    checkpoint=dict(type='CheckpointHook', interval=50, max_keep_ckpts=3),
+    logger=dict(type='LoggerHook', interval=100, log_metric_by_epoch=False),
+    checkpoint=dict(type='CheckpointHook', interval=50, max_keep_ckpts=3, by_epoch=False),
 )
 
-vis_backends = [dict(type='WandbVisBackend',
+wandb_config = dict(type='WandbVisBackend',
                      init_kwargs=dict(
                          entity='jnoat92',
                          project='MAE-selfsup',
-                         job_type="pretrained_{:03d}".format(int(file_train.split('/')[-1].split('.')[0].split('_')[1])),
-                         group= "max_epochs_{:04d}".format(max_epochs),
+                         group="pretrained_{:03d}".format(int(file_train.split('/')[-1].split('.')[0].split('_')[1])),
                          name='{{fileBasenameNoExtension}}',),
                      #  name='filename',),
                      define_metric_cfg=None,
                      commit=True,
                      log_code_name=None,
-                     watch_kwargs=None),
+                     watch_kwargs=None)
+
+vis_backends = [wandb_config,
                 dict(type='LocalVisBackend')]
 
 visualizer = dict(type='SelfSupVisualizer', 

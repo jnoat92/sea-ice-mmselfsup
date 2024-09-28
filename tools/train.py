@@ -10,7 +10,7 @@ from mmengine.runner import Runner
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a model')
     parser.add_argument('config', help='train config file path')
-    # parser.add_argument('--config', default = '/home/jnoat92/projects/rrg-dclausi/ai4arctic/sea-ice-mmselfsup/configs/selfsup/ai4arctic/mae_vit-base-p16_8xb512-coslr-400e_ai4arctic.py', help='train config file path')
+    # parser.add_argument('--config', default = '/home/jnoat92/projects/rrg-dclausi/ai4arctic/sea-ice-mmselfsup/configs/selfsup/ai4arctic/pretrain_50/mae_vit-base-p16_4xb8-amp-coslr-50ki_ai4arctic_pt50.py', help='train config file path')
     
     parser.add_argument('--work-dir', help='the dir to save logs and models')
     parser.add_argument(
