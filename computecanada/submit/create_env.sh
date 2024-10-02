@@ -39,7 +39,7 @@ pip install mmcv
 cd ../../mmselfsup/
 pip install -U openmim && mim install -e .
 
-cd ../../../sea-ice-mmseg/mmseg/
+cd ../../../sea-ice-mmseg/
 pip install -v -e .
 
 # _dir=$(pwd)
