@@ -87,14 +87,14 @@ def post_process(
 
 def main():
     parser = ArgumentParser()
-    # parser.add_argument('config', help='Model config file')
-    # parser.add_argument('--checkpoint', help='Checkpoint file')
-    # parser.add_argument('--img-path', help='Image file path')
-    # parser.add_argument('--out-file', help='The output image file path')
-    parser.add_argument('--config', default='/home/jnoat92/projects/def-l44xu-ab/ai4arctic/sea-ice-mmselfsup/configs/selfsup/ai4arctic/pretrain_50/mae_vit-base-p16_4xb8-amp-coslr-50ki_ai4arctic_pt50.py', help='Model config file')
-    parser.add_argument('--checkpoint', default='/home/jnoat92/projects/def-l44xu-ab/ai4arctic/sea-ice-mmselfsup/work_dirs/selfsup/mae_vit-base-p16_4xb8-amp-coslr-50ki_ai4arctic_pt50/iter_45750.pth',help='Checkpoint file')
-    parser.add_argument('--img-path', default='/home/jnoat92/scratch/dataset/ai4arctic/down_scale_9X/S1A_EW_GRDM_1SDH_20180814T120158_20180814T120258_023242_0286BE_36EF_icechart_cis_SGRDIHA_20180814T1201Z_pl_a/00007.pkl', help='Image file path')
-    parser.add_argument('--out-file', default='/home/jnoat92/projects/def-l44xu-ab/ai4arctic/sea-ice-mmselfsup/work_dirs/selfsup/mae_vit-base-p16_4xb8-amp-coslr-50ki_ai4arctic_pt50/20180814T120158_00010', help='The output image file path')
+    parser.add_argument('config', help='Model config file')
+    parser.add_argument('--checkpoint', help='Checkpoint file')
+    parser.add_argument('--img-path', help='Image file path')
+    parser.add_argument('--out-file', help='The output image file path')
+    # parser.add_argument('--config', default='/home/jnoat92/projects/rrg-dclausi/ai4arctic/sea-ice-mmselfsup/configs/selfsup/ai4arctic/pretrain_50/mae_vit-base-p16_4xb8-amp-coslr-50ki_ai4arctic_pt50.py', help='Model config file')
+    # parser.add_argument('--checkpoint', default='/home/jnoat92/projects/rrg-dclausi/ai4arctic/sea-ice-mmselfsup/work_dirs/selfsup/mae_vit-base-p16_4xb8-amp-coslr-50ki_ai4arctic_pt50/iter_45750.pth',help='Checkpoint file')
+    # parser.add_argument('--img-path', default='/home/jnoat92/scratch/dataset/ai4arctic/down_scale_9X/S1A_EW_GRDM_1SDH_20180814T120158_20180814T120258_023242_0286BE_36EF_icechart_cis_SGRDIHA_20180814T1201Z_pl_a/00007.pkl', help='Image file path')
+    # parser.add_argument('--out-file', default='/home/jnoat92/projects/rrg-dclausi/ai4arctic/sea-ice-mmselfsup/work_dirs/selfsup/mae_vit-base-p16_4xb8-amp-coslr-50ki_ai4arctic_pt50/visual_reconstruction', help='The output image file path')
     parser.add_argument(
         '--use-vis-pipeline',
         action='store_true',
@@ -131,9 +131,9 @@ def main():
     print('Model loaded.')
 
     # make random mask reproducible (comment out to make it change)
-    # random.seed(args.seed)
-    # np.random.seed(args.seed)
-    # torch.manual_seed(args.seed)
+    random.seed(args.seed)
+    np.random.seed(args.seed)
+    torch.manual_seed(args.seed)
 
     print('Reconstruction visualization.')
 
