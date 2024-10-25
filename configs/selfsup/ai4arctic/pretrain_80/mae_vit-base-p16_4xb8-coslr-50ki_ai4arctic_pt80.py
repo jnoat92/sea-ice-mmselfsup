@@ -30,12 +30,10 @@ data_root_patches = '/home/jnoat92/scratch/dataset/ai4arctic/'
 
 gt_root_test = '/home/jnoat92/projects/rrg-dclausi/ai4arctic/dataset/ai4arctic_raw_test_v3_segmaps'
 
-# file_train = '/home/jnoat92/projects/rrg-dclausi/ai4arctic/dataset/val_file_jnoat92.txt'
-file_train = '/home/jnoat92/projects/rrg-dclausi/ai4arctic/dataset/ai4arctic_raw_train_v3/pretrain_50.txt'
-# file_train = '/home/jnoat92/projects/rrg-dclausi/ai4arctic/dataset/ai4arctic_raw_train_v3/pretrain_70.txt'
-# file_train = '/home/jnoat92/projects/rrg-dclausi/ai4arctic/dataset/ai4arctic_raw_train_v3/pretrain_80.txt'
-# file_train = '/home/jnoat92/projects/rrg-dclausi/ai4arctic/dataset/ai4arctic_raw_train_v3/pretrain_90.txt'
-# file_train = '/home/jnoat92/projects/rrg-dclausi/ai4arctic/dataset/ai4arctic_raw_train_v3/pretrain_95.txt'
+# file_train = '/home/jnoat92/projects/rrg-dclausi/ai4arctic/dataset/data_split_setup/pretrain_20.txt'
+# file_train = '/home/jnoat92/projects/rrg-dclausi/ai4arctic/dataset/data_split_setup/pretrain_40.txt'
+# file_train = '/home/jnoat92/projects/rrg-dclausi/ai4arctic/dataset/data_split_setup/pretrain_60.txt'
+file_train = '/home/jnoat92/projects/rrg-dclausi/ai4arctic/dataset/data_split_setup/pretrain_80.txt'
 
 # load normalization params
 global_meanstd = np.load('/'.join([data_root_train_nc, 'global_meanstd.npy']), allow_pickle=True).item()
@@ -113,7 +111,7 @@ train_dataloader = dict(batch_size=8,
 # ============== MODEL ==============
 patch_size = 16
 model = dict(
-    type='MAE',
+    type='MAE_CCH',
     data_preprocessor=dict(mean=None, std=None, bgr_to_rgb=False),
     backbone=dict(type='MAEViT_CCH', 
                   arch='b', 
@@ -121,7 +119,7 @@ model = dict(
                   patch_size=patch_size, 
                   in_channels=len(channels),
                   mask_ratio=0.75, 
-                  out_indices=(3, 5, 7, 11),
+                  out_indices=[2, 5, 8, 11],
                   drop_path_rate=0.1
                 ),
     neck=dict(type='MAEPretrainDecoder', 
@@ -181,14 +179,14 @@ param_scheduler = [
 
 default_hooks = dict(
     logger=dict(type='LoggerHook', interval=100, log_metric_by_epoch=False),
-    checkpoint=dict(type='CheckpointHook', interval=50, max_keep_ckpts=3, by_epoch=False),
+    checkpoint=dict(type='CheckpointHook', interval=100, max_keep_ckpts=3, by_epoch=False),
 )
 
 wandb_config = dict(type='WandbVisBackend',
                      init_kwargs=dict(
                          entity='jnoat92',
                          project='MAE-selfsup',
-                         group="pretrained_{:03d}".format(int(file_train.split('/')[-1].split('.')[0].split('_')[1])),
+                         group="pt_{:03d}".format(int(file_train.split('/')[-1].split('.')[0].split('_')[1])),
                          name='{{fileBasenameNoExtension}}',),
                      #  name='filename',),
                      define_metric_cfg=None,
@@ -209,6 +207,7 @@ custom_imports = dict(
     imports=['mmselfsup.datasets.ai4arctic_patches',
             'mmselfsup.datasets.transforms.loading_ai4arctic_patches',
             'mmselfsup.datasets.samplers.ai4arctic_multires_sampler',
+            'mmselfsup.models.algorithms.mae_ai4arctic',
             'mmselfsup.models.backbones.mae_vit_custom_ichannels',
             'mmselfsup.models.heads.mae_head_non_fix_in_channels',
             ],
