@@ -179,7 +179,7 @@ param_scheduler = [
 
 default_hooks = dict(
     logger=dict(type='LoggerHook', interval=100, log_metric_by_epoch=False),
-    checkpoint=dict(type='CheckpointHook', interval=100, max_keep_ckpts=3, by_epoch=False),
+    checkpoint=dict(type='CheckpointHook', interval=5000, max_keep_ckpts=10, by_epoch=False),
 )
 
 wandb_config = dict(type='WandbVisBackend',

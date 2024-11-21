@@ -1,6 +1,6 @@
 set -e
 
-mapfile -t array < <(find /home/jnoat92/projects/rrg-dclausi/ai4arctic/sea-ice-mmselfsup/work_dirs -type d -name "vis_data")
+mapfile -t array < <(find /home/jnoat92/projects/rrg-dclausi/ai4arctic/sea-ice-mmselfsup/work_dirs/selfsup -type d -name "vis_data")
 
 module purge
 module load  StdEnv/2020 python/3.10.2
