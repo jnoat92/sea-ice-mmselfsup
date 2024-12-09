@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 **/*.pyc
 
+wandb/
 computecanada/output/
 
 # C extensions
