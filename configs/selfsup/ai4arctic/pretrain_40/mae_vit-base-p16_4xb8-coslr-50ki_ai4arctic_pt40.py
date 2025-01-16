@@ -122,9 +122,10 @@ model = dict(
                   out_indices=[2, 5, 8, 11],
                   drop_path_rate=0.1
                 ),
-    neck=dict(type='MAEPretrainDecoder', 
+    neck=dict(type='MAEPretrainDecoder_custom', 
               num_patches=(crop_size[0]//patch_size)**2, 
-              in_chans=len(channels)),
+              in_chans=len(channels),
+              attn_drop_rate=0.3),
     head=dict(
         type='MAEPretrainHeadNonFixInChannels',
         norm_pix=True,
@@ -209,6 +210,7 @@ custom_imports = dict(
             'mmselfsup.datasets.samplers.ai4arctic_multires_sampler',
             'mmselfsup.models.algorithms.mae_ai4arctic',
             'mmselfsup.models.backbones.mae_vit_custom_ichannels',
+            'mmselfsup.models.necks.mae_neck_custom',
             'mmselfsup.models.heads.mae_head_non_fix_in_channels',
             ],
     allow_failed_imports=False)
