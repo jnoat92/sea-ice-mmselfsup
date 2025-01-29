@@ -10,7 +10,7 @@ class MAEPretrainHeadNonFixInChannels(BaseModule):
     """Pre-training head for MAE.
         MODIFIED by No@ FROM mae_head.py
             IT INCLUDES:
-                - Customized in_channels
+                - Customized output channels
 
     Args:
         loss (dict): Config of loss.
