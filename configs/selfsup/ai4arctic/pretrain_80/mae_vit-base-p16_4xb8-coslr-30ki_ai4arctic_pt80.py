@@ -8,7 +8,7 @@ _base_ = [
 import numpy as np
 
 crop_size = (384, 384)
-
+mask_ratio = 0.75
 downsample_factor_train = [2, 3, 4, 5, 6, 7, 8, 9, 10]   # List all downsampling factors from 2X to 10X to include during training
 
 
@@ -18,7 +18,8 @@ possible_channels = ['nersc_sar_primary', 'nersc_sar_secondary',
                     'btemp_18_7v', 'btemp_23_8h', 'btemp_23_8v', 'btemp_36_5h', 'btemp_36_5v', 'btemp_89_0h', 'btemp_89_0v',
                     'u10m_rotated', 'v10m_rotated', 't2m', 'skt', 'tcwv', 'tclw', 
                     'sar_grid_incidenceangle', 
-                    'sar_grid_latitude', 'sar_grid_longitude', 'month', 'day']
+                    'sar_grid_latitude', 'sar_grid_longitude', 'month', 'day'
+                    ]
 
 # dataset settings
 dataset_type_train = 'AI4ArcticPatches'
@@ -32,8 +33,8 @@ gt_root_test = '/home/jnoat92/projects/rrg-dclausi/ai4arctic/dataset/ai4arctic_r
 
 # file_train = '/home/jnoat92/projects/rrg-dclausi/ai4arctic/dataset/data_split_setup/pretrain_20.txt'
 # file_train = '/home/jnoat92/projects/rrg-dclausi/ai4arctic/dataset/data_split_setup/pretrain_40.txt'
-file_train = '/home/jnoat92/projects/rrg-dclausi/ai4arctic/dataset/data_split_setup/pretrain_60.txt'
-# file_train = '/home/jnoat92/projects/rrg-dclausi/ai4arctic/dataset/data_split_setup/pretrain_80.txt'
+# file_train = '/home/jnoat92/projects/rrg-dclausi/ai4arctic/dataset/data_split_setup/pretrain_60.txt'
+file_train = '/home/jnoat92/projects/rrg-dclausi/ai4arctic/dataset/data_split_setup/pretrain_80.txt'
 
 # load normalization params
 global_meanstd = np.load('/'.join([data_root_train_nc, 'global_meanstd.npy']), allow_pickle=True).item()
@@ -56,29 +57,29 @@ channels = [
     'nersc_sar_primary',
     'nersc_sar_secondary',
 
-    # -- incidence angle -- #
-    'sar_grid_incidenceangle',
+    # # -- incidence angle -- #
+    # 'sar_grid_incidenceangle',
 
-    # -- Geographical variables -- #
-    'sar_grid_latitude',
-    'sar_grid_longitude',
-    'distance_map',
+    # # -- Geographical variables -- #
+    # 'sar_grid_latitude',
+    # 'sar_grid_longitude',
+    # 'distance_map',
 
     # # -- AMSR2 channels -- #
-    'btemp_6_9h', 'btemp_6_9v',
-    'btemp_7_3h', 'btemp_7_3v',
-    'btemp_10_7h', 'btemp_10_7v',
-    'btemp_18_7h', 'btemp_18_7v',
-    'btemp_23_8h', 'btemp_23_8v',
-    'btemp_36_5h', 'btemp_36_5v',
-    'btemp_89_0h', 'btemp_89_0v',
+    # 'btemp_6_9h', 'btemp_6_9v',
+    # 'btemp_7_3h', 'btemp_7_3v',
+    # 'btemp_10_7h', 'btemp_10_7v',
+    # 'btemp_18_7h', 'btemp_18_7v',
+    # 'btemp_23_8h', 'btemp_23_8v',
+    # 'btemp_36_5h', 'btemp_36_5v',
+    # 'btemp_89_0h', 'btemp_89_0v',
 
     # # -- Environmental variables -- #
-    'u10m_rotated', 'v10m_rotated',
-    't2m', 'skt', 'tcwv', 'tclw',
+    # 'u10m_rotated', 'v10m_rotated',
+    # 't2m', 'skt', 'tcwv', 'tclw',
 
-    # -- acquisition time
-    'month', 'day'
+    # # -- acquisition time
+    # 'month', 'day'
 ]
 
 
@@ -100,8 +101,8 @@ concat_dataset = dict(type='ConcatDataset',
                                     ann_file = file_train,
                                     pipeline = train_pipeline) for i in downsample_factor_train])
 
-train_dataloader = dict(batch_size=8,
-                        num_workers=8,
+train_dataloader = dict(batch_size=32,
+                        num_workers=16,
                         persistent_workers=True,
                         sampler=dict(type='WeightedInfiniteSampler', use_weights=True),
                         collate_fn=dict(type='default_collate'),
@@ -118,7 +119,7 @@ model = dict(
                   img_size=crop_size,
                   patch_size=patch_size, 
                   in_channels=len(channels),
-                  mask_ratio=0.75, 
+                  mask_ratio=mask_ratio, 
                   out_indices=[2, 5, 8, 11],
                   drop_path_rate=0.1
                 ),
@@ -139,7 +140,7 @@ model = dict(
 # optimizer wrapper
 # Using 4 GPUs
 optimizer = dict(
-    type='AdamW', lr=1e-4 * 4, betas=(0.9, 0.999), weight_decay=0.01)
+    type='AdamW', lr=2e-4, betas=(0.9, 0.999), weight_decay=0.01)
 optim_wrapper = dict(
     type='OptimWrapper',
     optimizer=optimizer,
@@ -153,7 +154,7 @@ optim_wrapper = dict(
         }))
 
 # runtime settings
-n_iterations = 50000
+n_iterations = 30000
 train_cfg = dict(type='IterBasedTrainLoop', 
                  max_iters=n_iterations,
                  _delete_=True)
@@ -186,7 +187,7 @@ default_hooks = dict(
 wandb_config = dict(type='WandbVisBackend',
                      init_kwargs=dict(
                          entity='jnoat92',
-                         project='MAE-selfsup',
+                         project='MAE-HH-HV',
                          group="pt_{:03d}".format(int(file_train.split('/')[-1].split('.')[0].split('_')[1])),
                          name='{{fileBasenameNoExtension}}',),
                      #  name='filename',),
