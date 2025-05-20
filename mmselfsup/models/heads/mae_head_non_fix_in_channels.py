@@ -1,4 +1,6 @@
-# Copyright (c) OpenMMLab. All rights reserved.
+"""
+No@
+"""
 import torch
 from mmengine.model import BaseModule
 

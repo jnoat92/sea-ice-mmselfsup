@@ -1,4 +1,7 @@
-# Copyright (c) OpenMMLab. All rights reserved.
+"""
+No@
+Jan 2025
+"""
 from typing import List, Optional, Tuple, Union
 import torch
 from mmcv.cnn import build_norm_layer

@@ -1,6 +1,7 @@
-# Copyright (c) OpenMMLab. All rights reserved.
-# Modified from https://colab.research.google.com/github/facebookresearch/mae
-# /blob/main/demo/mae_visualize.ipynb
+"""
+No@
+Jan 2025
+"""
 import random
 from argparse import ArgumentParser
 from typing import Tuple

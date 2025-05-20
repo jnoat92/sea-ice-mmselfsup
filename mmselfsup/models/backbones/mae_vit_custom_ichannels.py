@@ -1,4 +1,6 @@
-# Copyright (c) OpenMMLab. All rights reserved.
+"""
+No@
+"""
 from typing import List, Optional, Sequence, Tuple, Union
 
 import torch
