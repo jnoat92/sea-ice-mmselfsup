@@ -10,6 +10,8 @@ This repository extends mmselfsup to support remote sensing data. Specifically, 
 
 ### Visualization
 
+Visualization code adapted for Ai4Arctic dataset: [visualize_reconstruction_ai4arctic.py](tools/analysis_tools/visualize_reconstruction_ai4arctic.py)
+
 ### Config
 Config files to run experiments are located at [configs/selfsup/ai4arctic](configs/selfsup/ai4arctic/)
 
