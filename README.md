@@ -11,7 +11,7 @@ This repository extends mmselfsup to support remote sensing data. Specifically, 
 ### Visualization
 
 ### Config
-Config files to run experiments are located at [configs/multi_task_ai4arctic/](configs/multi_task_ai4arctic/)
+Config files to run experiments are located at [configs/selfsup/ai4arctic](configs/selfsup/ai4arctic/)
 
 # How to use:
 
