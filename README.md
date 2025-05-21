@@ -15,6 +15,6 @@ Visualization code adapted for Ai4Arctic dataset: [visualize_reconstruction_ai4a
 ### Config
 Config files to run experiments are located at [configs/selfsup/ai4arctic](configs/selfsup/ai4arctic/)
 
-# How to use:
+# [How to use](https://github.com/RS-VIP/sea-ice-mmseg/blob/main/README.md#how-to-use):
 
 
