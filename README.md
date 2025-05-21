@@ -7,3 +7,12 @@ This repository extends mmselfsup to support remote sensing data. Specifically, 
 # What's New
 
 ### [Datasets](https://github.com/RS-VIP/sea-ice-mmseg/blob/main/README.md#datasets)
+
+### Visualization
+
+### Config
+Config files to run experiments are located at [configs/multi_task_ai4arctic/](configs/multi_task_ai4arctic/)
+
+# How to use:
+
+
